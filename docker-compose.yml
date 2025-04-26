@@ -55,6 +55,25 @@ services:
       - gas_network
     command: npm start # Express 서버 실행 명령어
 
+  #실시간 차트 대시보드
+  streamlit:
+    build: ./streamlit_dashboard
+    container_name: streamlit_dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8501:8501"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=gas_sensor
+      - DB_USER=mygasuser
+      - DB_PASSWORD=mygaspassword
+    networks:
+      - gas_network
+
 networks:
   gas_network:
     driver: bridge

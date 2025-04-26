@@ -19,7 +19,8 @@ def run_simulation(duration: int = 10, interval: float = 1.0):
             payload = {
                 "sensor_id": sensor_id,
                 "gas_type": gas_type,
-                "value": value
+                "value": value,
+                "is_normal": is_normal
             }
             publisher.publish("sensors/gas", payload)
         time.sleep(interval)

@@ -27,16 +27,18 @@ mqttClient.on("connect", () => {
 mqttClient.on("message", async (topic, message) => {
   try {
     const data = JSON.parse(message.toString());
-    const { sensor_id, gas_type, value } = data;
+    const { sensor_id, gas_type, value, is_normal } = data;
 
     // DB에 INSERT
     await db.query(
-      `INSERT INTO sensor_readings (sensor_id, gas_type, value)
-       VALUES ($1, $2, $3)`,
-      [sensor_id, gas_type, value]
+      `INSERT INTO sensor_readings (sensor_id, gas_type, value, is_normal)
+       VALUES ($1, $2, $3, $4)`,
+      [sensor_id, gas_type, value, is_normal]
     );
 
-    console.log(`[DB] 저장됨: ${sensor_id} | ${gas_type} | ${value} ppm`);
+    console.log(
+      `[DB] 저장됨: ${sensor_id} | ${gas_type} | ${value} ppm | ${is_normal}`
+    );
   } catch (err) {
     console.error("[MQTT] 메시지 처리 실패:", err.message);
   }
