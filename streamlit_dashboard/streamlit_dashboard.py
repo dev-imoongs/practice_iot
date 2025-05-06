@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # 자동 새로고침 (5초마다)
-st_autorefresh(interval=5000, limit=None, key="refresh")
+st_autorefresh(interval=1000, limit=None, key="refresh")
 
 # 환경변수 또는 기본값
 DB_HOST = os.getenv("DB_HOST")
@@ -75,6 +75,12 @@ df = load_data(minutes)
 
 if df.empty:
     st.warning("데이터가 없습니다.")
+    if st.button("🚀 시뮬레이터 실행"):
+        with st.spinner('시뮬레이터 컨테이너를 실행하는 중입니다...'):
+            try:
+                restart_container('gas_sensor_simulator')
+            except Exception as e:
+                st.error(f"❌ 시뮬레이터 실행 실패: {e}")
 else:
     sensor_types = df["gas_type"].unique().tolist()
     selected_type = st.selectbox("센서 타입", sensor_types)

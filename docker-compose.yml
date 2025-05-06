@@ -1,11 +1,12 @@
 services:
   db:
-    image: postgres:14
+    image: postgres:latest
     container_name: postgres_db
     environment:
       POSTGRES_USER: mygasuser
       POSTGRES_PASSWORD: mygaspassword
       POSTGRES_DB: gas_sensor
+      TZ: Asia/Seoul
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
@@ -14,7 +15,7 @@ services:
       - gas_network
 
   mqtt-broker:
-    image: eclipse-mosquitto:2
+    image: eclipse-mosquitto
     container_name: mqtt_broker
     ports:
       - "1883:1883"

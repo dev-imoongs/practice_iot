@@ -1,3 +1,5 @@
+SET TIMEZONE = 'Asia/Seoul';
+
 CREATE TABLE IF NOT EXISTS sensor_readings (
     id SERIAL PRIMARY KEY,
     sensor_id VARCHAR(50) NOT NULL,

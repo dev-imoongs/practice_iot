@@ -28,8 +28,8 @@ def run_simulation(duration: int = 10, interval: float = 1.0):
 
 if __name__ == "__main__":
     print("▶️ run_simulation() 시작3")
-    co2_sensor = GasSensor("X1001","CO2", 50.0, 200.0)
-    ch4_sensor = GasSensor("X1010","CH4", 80.0, 250.0)
+    co2_sensor = GasSensor("X1001","CO2", 50.0, 270.0)
+    ch4_sensor = GasSensor("X1010","CH4", 80.0, 320.0)
     detector = GasDetector()
     detector.add_sensor(co2_sensor)
     detector.add_sensor(ch4_sensor)
