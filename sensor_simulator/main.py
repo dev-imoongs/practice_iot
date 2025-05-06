@@ -34,7 +34,7 @@ if __name__ == "__main__":
     detector.add_sensor(co2_sensor)
     detector.add_sensor(ch4_sensor)
     try:
-        run_simulation(duration=300, interval=2.5)
+        run_simulation(duration=300, interval=2)
     except Exception as e:
         print(f"Error occurred: {e}")
 

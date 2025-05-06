@@ -6,6 +6,7 @@ import os
 import altair as alt
 from streamlit_autorefresh import st_autorefresh  # 중요!
 import docker
+import pytz
 
 # 페이지 설정
 st.set_page_config(
@@ -54,7 +55,12 @@ def restart_container(container_name):
 def load_data(minutes=5):
     conn = get_connection()
     cursor = conn.cursor()
-    time_threshold = datetime.now() - timedelta(minutes=minutes)
+    # KST 시간대 지정
+    kst = pytz.timezone('Asia/Seoul')
+    time_threshold = datetime.now(kst) - timedelta(minutes=minutes)
+
+    st.write(f"데이터 조회 기준 시간 (KST): {time_threshold}")  
+    
     cursor.execute("""
         SELECT measured_at, sensor_id, gas_type, value, is_normal
         FROM sensor_readings
@@ -69,7 +75,7 @@ def load_data(minutes=5):
 st.title("🔥 실시간 가스 센서 모니터링")
 
 minutes = st.slider("최근 몇 분 데이터를 볼까요?", 1, 60, 5)
-
+st.write(f"선택한 시간 범위: {minutes}분")
 # 데이터 로딩
 df = load_data(minutes)
 
