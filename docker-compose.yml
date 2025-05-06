@@ -1,7 +1,6 @@
 services:
-  # 데이터베이스 (postgreSQL)
   db:
-    image: postgres:latest
+    image: postgres:14
     container_name: postgres_db
     environment:
       POSTGRES_USER: mygasuser
@@ -14,9 +13,8 @@ services:
     networks:
       - gas_network
 
-  # MQTT 브로커 (Mosquitto)
   mqtt-broker:
-    image: eclipse-mosquitto
+    image: eclipse-mosquitto:2
     container_name: mqtt_broker
     ports:
       - "1883:1883"
@@ -28,9 +26,8 @@ services:
     networks:
       - gas_network
 
-  # 센서 시뮬레이터 (Python)
   sensor_simulator:
-    build: ./sensor_simulator
+    image: devimoong/iot-platform:sensor_simulator
     container_name: gas_sensor_simulator
     environment:
       MQTT_BROKER_URL: mqtt://mqtt-broker:1883
@@ -40,24 +37,22 @@ services:
       - gas_network
     command: python3 main.py
 
-  # Express 서버 (Node.js)
   app:
-    build: ./backend # backend 디렉토리로 경로 설정
+    image: devimoong/iot-platform:app
     container_name: gas_sensor_app
     environment:
-      DATABASE_URL: postgres://mygasuser:mygaspassword@db:5432/gas_sensor # DB 연결 URL
+      DATABASE_URL: postgres://mygasuser:mygaspassword@db:5432/gas_sensor
     depends_on:
       - db
-      - sensor_simulator # 센서 시뮬레이터가 먼저 실행되도록 설정
+      - sensor_simulator
     ports:
-      - "3000:3000" # Express 앱을 3000번 포트로 노출
+      - "3000:3000"
     networks:
       - gas_network
-    command: npm start # Express 서버 실행 명령어
+    command: npm start
 
-  #실시간 차트 대시보드
   streamlit:
-    build: ./streamlit_dashboard
+    image: devimoong/iot-platform:dashboard
     container_name: streamlit_dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
